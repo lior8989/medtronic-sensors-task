@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Unit, integration and endpoint tests (xUnit v3). Shared settings: tests/Directory.Build.props. -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3.mtp-v2" Version="4.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Sensor.Communication\Sensor.Communication.csproj" />
+    <ProjectReference Include="..\..\src\Sensor.Control\Sensor.Control.csproj" />
+    <ProjectReference Include="..\..\src\Sensor.WebApi\Sensor.WebApi.csproj" />
+  </ItemGroup>
+
+</Project>

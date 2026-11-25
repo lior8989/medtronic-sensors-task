@@ -1,0 +1,21 @@
+<Project>
+  <!--
+    Shared build settings for all projects under src/ (and tests/, which imports this file).
+    Deliberately NOT at the repository root: MSBuild walks up the directory tree, so a root
+    file would also apply to the supplied simulators under simulators/, which must stay unchanged.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Quality gates: every warning fails the build; built-in .NET analyzers at the latest level. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <!-- Emit XML docs so a public member without /// documentation is a build error (CS1591). -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+</Project>

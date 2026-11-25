@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Per-sensor control (SensorControl), system state machine, pairing and processing. Shared settings: src/Directory.Build.props. -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sensor.Communication\Sensor.Communication.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Sensor.Tests" />
+  </ItemGroup>
+
+</Project>

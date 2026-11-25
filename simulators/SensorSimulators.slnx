@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Sensors/">
+    <Project Path="Sensors/CameraSensor/CameraSensor.csproj" />
+    <Project Path="Sensors/PointerSensor/PointerSensor.csproj" />
+    <Project Path="Sensors/SensorShared/SensorShared.csproj" />
+  </Folder>
+</Solution>

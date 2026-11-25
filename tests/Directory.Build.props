@@ -1,0 +1,13 @@
+<Project>
+  <!-- Reuse the shared settings from src/ so production and test code build under the same rules. -->
+  <Import Project="$(MSBuildThisFileDirectory)..\src\Directory.Build.props" />
+
+  <PropertyGroup>
+    <!--
+      Test classes and methods are public only because xUnit requires it; their behavior-describing
+      names (Method_Condition_ExpectedResult) are the documentation. Non-obvious tests still get comments.
+    -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+</Project>

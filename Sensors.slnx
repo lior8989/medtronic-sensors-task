@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Sensor.Communication/Sensor.Communication.csproj" />
+    <Project Path="src/Sensor.Control/Sensor.Control.csproj" />
+    <Project Path="src/Sensor.WebApi/Sensor.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Sensor.Tests/Sensor.Tests.csproj" />
+  </Folder>
+  <Folder Name="/simulators/">
+    <Project Path="simulators/Sensors/CameraSensor/CameraSensor.csproj" />
+    <Project Path="simulators/Sensors/PointerSensor/PointerSensor.csproj" />
+    <Project Path="simulators/Sensors/SensorShared/SensorShared.csproj" />
+  </Folder>
+</Solution>
