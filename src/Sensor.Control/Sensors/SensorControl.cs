@@ -86,6 +86,12 @@ public sealed partial class SensorControl
     /// </summary>
     public SensorState? State { get; private set; }
 
+    /// <summary>
+    /// Timestamp of the heartbeat that first reported the current <see cref="State"/> (i.e. when the
+    /// reported state last changed), or <see langword="null"/> if no state is known.
+    /// </summary>
+    public long? StateChangedTimestamp { get; private set; }
+
     /// <summary>Last accepted command sequence reported by the latest heartbeat (0 if none).</summary>
     public ulong LastAcceptedCommandSequence { get; private set; }
 
@@ -221,6 +227,7 @@ public sealed partial class SensorControl
         _lastSequence = 0;
         _lastSentCommandSequence = 0;
         State = null;
+        StateChangedTimestamp = null;
         LastAcceptedCommandSequence = 0;
         LastHeartbeatTimestamp = null;
         LatestMeasurement = null;
@@ -252,6 +259,7 @@ public sealed partial class SensorControl
                 if (State != heartbeat.State)
                 {
                     LogStateReported(SensorId, State?.ToString() ?? "unknown", heartbeat.State);
+                    StateChangedTimestamp = now;
                 }
 
                 State = heartbeat.State;

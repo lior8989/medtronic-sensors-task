@@ -202,6 +202,21 @@ public sealed class SensorControlTests
     }
 
     [Fact]
+    public void Accept_HeartbeatWithSameState_KeepsStateChangedTimestamp()
+    {
+        Accept(Heartbeat(Session, 1, SensorState.Setup));
+        var changedAt = _camera.StateChangedTimestamp;
+        _time.Advance(TimeSpan.FromMilliseconds(250));
+
+        Accept(Heartbeat(Session, 2, SensorState.Setup));
+        Assert.Equal(changedAt, _camera.StateChangedTimestamp);
+
+        _time.Advance(TimeSpan.FromMilliseconds(250));
+        Accept(Heartbeat(Session, 3, SensorState.Ready));
+        Assert.Equal(_time.GetTimestamp(), _camera.StateChangedTimestamp);
+    }
+
+    [Fact]
     public void GetSilenceDuration_ReflectsTimeSinceLastValidTraffic()
     {
         Assert.Null(_camera.GetSilenceDuration());
