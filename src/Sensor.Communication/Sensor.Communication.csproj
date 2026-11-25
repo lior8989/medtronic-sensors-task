@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Wire protocol (packet model, codec in both directions) and datagram transport. Shared settings: src/Directory.Build.props. -->
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Sensor.Tests" />
+  </ItemGroup>
+
+</Project>

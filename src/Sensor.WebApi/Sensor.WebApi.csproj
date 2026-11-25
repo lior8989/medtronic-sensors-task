@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <!-- ASP.NET Core host: background services, minimal API endpoints, Swagger, static UI. Shared settings: src/Directory.Build.props. -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sensor.Control\Sensor.Control.csproj" />
+  </ItemGroup>
+
+</Project>
