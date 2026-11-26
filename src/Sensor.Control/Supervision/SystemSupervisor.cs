@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.Extensions.Logging;
 using Sensor.Communication.Protocol;
+using Sensor.Control.Processing;
 using Sensor.Control.Sensors;
 
 namespace Sensor.Control.Supervision;
@@ -25,6 +26,7 @@ namespace Sensor.Control.Supervision;
 public sealed partial class SystemSupervisor
 {
     private readonly SensorControl[] _sensors;
+    private readonly IMeasurementSink _measurementSink;
     private readonly SupervisorOptions _options;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger<SystemSupervisor> _logger;
@@ -39,18 +41,21 @@ public sealed partial class SystemSupervisor
     /// <summary>Creates the supervisor in <see cref="SystemState.Initializing"/>.</summary>
     /// <param name="camera">Controller of the Camera sensor.</param>
     /// <param name="pointer">Controller of the Pointer sensor.</param>
+    /// <param name="measurementSink">Receives measurements while Running and is told when processing stops.</param>
     /// <param name="options">Timing settings.</param>
     /// <param name="timeProvider">Monotonic time source (fake in tests).</param>
     /// <param name="logger">Logger.</param>
     public SystemSupervisor(
         SensorControl camera,
         SensorControl pointer,
+        IMeasurementSink measurementSink,
         SupervisorOptions options,
         TimeProvider timeProvider,
         ILogger<SystemSupervisor> logger)
     {
         ArgumentNullException.ThrowIfNull(camera);
         ArgumentNullException.ThrowIfNull(pointer);
+        ArgumentNullException.ThrowIfNull(measurementSink);
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(timeProvider);
         ArgumentNullException.ThrowIfNull(logger);
@@ -63,6 +68,7 @@ public sealed partial class SystemSupervisor
         Camera = camera;
         Pointer = pointer;
         _sensors = [camera, pointer];
+        _measurementSink = measurementSink;
         _options = options;
         _timeProvider = timeProvider;
         _logger = logger;
@@ -105,6 +111,12 @@ public sealed partial class SystemSupervisor
         if (disposition is PacketDisposition.Accepted or PacketDisposition.AcceptedNewSession)
         {
             await EvaluateAsync(cancellationToken).ConfigureAwait(false);
+
+            // Evaluate first: a measurement only reaches processing if the system is still Running after it.
+            if (State == SystemState.Running && packet is MeasurementPacket && sensor.LatestMeasurement is { } measurement)
+            {
+                _measurementSink.OnRunningMeasurement(sensor.SensorId, measurement);
+            }
         }
 
         return disposition;
@@ -342,6 +354,14 @@ public sealed partial class SystemSupervisor
 
         State = next;
         LogTransition(previous, next);
+
+        // Leaving Running (fault, or reconfiguring after a restart) stops processing: cached samples and
+        // in-flight work are discarded so packets already in flight are never paired in a later run.
+        if (previous == SystemState.Running)
+        {
+            _measurementSink.OnProcessingStopped();
+        }
+
         StateChanged?.Invoke(previous, next);
     }
 

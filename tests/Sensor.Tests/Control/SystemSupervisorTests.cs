@@ -359,6 +359,48 @@ public sealed class SystemSupervisorTests
         Assert.Equal(SystemState.Faulted, _h.State);
     }
 
+    // ---------------- Processing hook ----------------
+
+    [Fact]
+    public async Task Measurements_AreForwardedOnlyWhileRunning()
+    {
+        await _h.Heartbeats(SensorState.Setup, SensorState.Setup);
+        await _h.Measurement(_h.Camera); // Configuring: not forwarded (raw data is still tracked by SensorControl).
+        Assert.NotNull(_h.Supervisor.Camera.LatestMeasurement);
+
+        await _h.Heartbeats(SensorState.Ready, SensorState.Ready);
+        await _h.Measurement(_h.Camera);
+        await _h.Measurement(_h.Pointer);
+
+        Assert.Equal([SensorId.Camera, SensorId.Pointer], _h.Sink.Measurements.Select(m => m.Sensor));
+    }
+
+    [Fact]
+    public async Task LeavingRunning_StopsProcessing()
+    {
+        await _h.BringToRunning();
+        Assert.Equal(0, _h.Sink.StoppedCount);
+
+        await _h.Heartbeat(_h.Camera, SensorState.Error);
+        await _h.Measurement(_h.Pointer); // In flight after the fault: not forwarded.
+
+        Assert.Equal(1, _h.Sink.StoppedCount);
+        Assert.Empty(_h.Sink.Measurements);
+    }
+
+    [Fact]
+    public async Task MeasurementThatRevealsSilenceFault_IsNotForwarded()
+    {
+        await _h.BringToRunning();
+        await _h.Heartbeat(_h.Pointer, SensorState.Ready);
+        _h.Time.Advance(TimeSpan.FromMilliseconds(1100)); // Camera silent, no tick ran yet.
+
+        await _h.Measurement(_h.Pointer); // Evaluation faults first, so this sample is not processed.
+
+        Assert.Equal(SystemState.Faulted, _h.State);
+        Assert.Empty(_h.Sink.Measurements);
+    }
+
     [Fact]
     public async Task StateChanged_IsRaisedForEachTransition()
     {

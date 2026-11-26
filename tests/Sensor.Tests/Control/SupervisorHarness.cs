@@ -49,8 +49,11 @@ internal sealed class SupervisorHarness
     {
         var camera = new SensorControl(SensorId.Camera, CameraEndpoint, Transport, Time, NullLogger<SensorControl>.Instance);
         var pointer = new SensorControl(SensorId.Pointer, PointerEndpoint, Transport, Time, NullLogger<SensorControl>.Instance);
-        Supervisor = new SystemSupervisor(camera, pointer, Options, Time, NullLogger<SystemSupervisor>.Instance);
+        Supervisor = new SystemSupervisor(camera, pointer, Sink, Options, Time, NullLogger<SystemSupervisor>.Instance);
     }
+
+    /// <summary>Records what the supervisor forwards to processing.</summary>
+    public RecordingMeasurementSink Sink { get; } = new();
 
     public FakeTimeProvider Time { get; } = new();
 
