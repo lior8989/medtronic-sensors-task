@@ -4,6 +4,7 @@ using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 using Sensor.Communication.Protocol;
 using Sensor.Communication.Transport;
+using Sensor.Control.Status;
 
 namespace Sensor.Control.Supervision;
 
@@ -29,6 +30,7 @@ public sealed partial class SupervisorEventLoop
 
     private readonly IDatagramTransport _transport;
     private readonly SystemSupervisor _supervisor;
+    private readonly ISupervisorObserver _observer;
     private readonly SupervisorOptions _options;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger<SupervisorEventLoop> _logger;
@@ -36,24 +38,28 @@ public sealed partial class SupervisorEventLoop
     /// <summary>Creates the event loop.</summary>
     /// <param name="transport">The backend's single bound socket.</param>
     /// <param name="supervisor">The state machine to drive.</param>
+    /// <param name="observer">Notified after each event (e.g. to publish a status snapshot).</param>
     /// <param name="options">Timing settings (tick period).</param>
     /// <param name="timeProvider">Time source for the periodic tick (fake in tests).</param>
     /// <param name="logger">Logger.</param>
     public SupervisorEventLoop(
         IDatagramTransport transport,
         SystemSupervisor supervisor,
+        ISupervisorObserver observer,
         SupervisorOptions options,
         TimeProvider timeProvider,
         ILogger<SupervisorEventLoop> logger)
     {
         ArgumentNullException.ThrowIfNull(transport);
         ArgumentNullException.ThrowIfNull(supervisor);
+        ArgumentNullException.ThrowIfNull(observer);
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(timeProvider);
         ArgumentNullException.ThrowIfNull(logger);
 
         _transport = transport;
         _supervisor = supervisor;
+        _observer = observer;
         _options = options;
         _timeProvider = timeProvider;
         _logger = logger;
@@ -159,6 +165,8 @@ public sealed partial class SupervisorEventLoop
                 {
                     await _supervisor.HandleTickAsync(cancellationToken).ConfigureAwait(false);
                 }
+
+                _observer.OnEventProcessed(_supervisor);
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {

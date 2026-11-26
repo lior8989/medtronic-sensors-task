@@ -1,0 +1,19 @@
+body { font-family: system-ui, sans-serif; margin: 0; background: #f4f5f7; color: #1d1f23; }
+header { display: flex; gap: 1rem; align-items: center; padding: .75rem 1.5rem; background: #1d1f23; color: #fff; }
+header h1 { font-size: 1.1rem; margin: 0; }
+header a { color: #9cc3ff; margin-left: auto; }
+main { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; padding: 1rem 1.5rem; }
+.card { background: #fff; border-radius: 8px; padding: 1rem; box-shadow: 0 1px 2px rgb(0 0 0 / 10%); }
+.card h2 { font-size: 1rem; margin: 0 0 .75rem; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: .3rem .4rem; border-bottom: 1px solid #eee; }
+canvas { image-rendering: pixelated; border: 1px solid #ccc; background: #eee; }
+.badge { display: inline-block; padding: .15rem .6rem; border-radius: 999px; background: #ddd; color: #1d1f23; font-weight: 600; }
+.state .badge { font-size: 1.2rem; }
+.s-Running, .s-Ready, .s-Connected, .s-live { background: #c8f0d0; }
+.s-Configuring, .s-Initializing, .s-Setup { background: #fdeeb5; }
+.s-Faulted, .s-Error, .s-Disconnected, .s-down { background: #f8c9c9; }
+.result { display: flex; gap: 1rem; align-items: center; }
+.swatch { width: 48px; height: 48px; border-radius: 6px; border: 1px solid #ccc; background: #eee; }
+.mono { font-family: ui-monospace, monospace; }
+.muted { color: #666; font-size: .9rem; }

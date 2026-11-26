@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Sensor.Communication.Protocol;
+using Sensor.Control.Status;
 using Sensor.Control.Supervision;
 
 namespace Sensor.Tests.Control;
@@ -14,8 +15,10 @@ public sealed class SupervisorEventLoopTests
 
     private readonly SupervisorHarness _h = new();
 
+    private SystemStatusStore Status => field ??= new SystemStatusStore(_h.Options);
+
     private SupervisorEventLoop CreateLoop() =>
-        new(_h.Transport, _h.Supervisor, _h.Options, _h.Time, NullLogger<SupervisorEventLoop>.Instance);
+        new(_h.Transport, _h.Supervisor, Status, _h.Options, _h.Time, NullLogger<SupervisorEventLoop>.Instance);
 
     /// <summary>Waits (real time, bounded) until the loop thread has produced the expected effect.</summary>
     private static async Task WaitUntil(Func<bool> condition)
