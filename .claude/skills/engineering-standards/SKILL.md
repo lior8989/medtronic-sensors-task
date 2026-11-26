@@ -83,7 +83,9 @@ ordered, but rule 3 (balance) governs how rules 1 and 2 are applied.
   PROTOCOL.md, README.md). The web UI stays simple: static HTML/JS/CSS in `wwwroot`, no
   frontend framework or Node toolchain.
 - Do not change the dev environment (global tools, SDKs, system settings) unless required.
-- The supplied simulators under `simulators/` are reference material: **do not modify them**.
+- The supplied simulators under `simulators/` are reference material: **do not modify them**, except
+  the single approved Windows UDP connection-reset fix (see CLAUDE.md). The backend must keep working
+  with the original, unmodified simulators.
 
 ## Checklist before presenting a change
 

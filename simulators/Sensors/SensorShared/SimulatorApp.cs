@@ -53,10 +53,25 @@ public static class SimulatorApp
         }
     }
 
+    /// <summary>
+    /// Windows only: stops an ICMP "port unreachable" (e.g. a heartbeat sent while the backend is not
+    /// listening yet, or after it stopped) from surfacing as SocketError.ConnectionReset on the next
+    /// receive, which would otherwise end the simulator. Local change to the supplied simulator.
+    /// </summary>
+    private static void DisableUdpConnectionReset(UdpClient udp)
+    {
+        const int SioUdpConnReset = unchecked((int)0x9800000C);
+        if (OperatingSystem.IsWindows())
+        {
+            udp.Client.IOControl(SioUdpConnReset, [0, 0, 0, 0], null);
+        }
+    }
+
     private static async Task RunLoopAsync(
         SensorSession session, SimulatorOptions options, CancellationToken cancellationToken)
     {
         using var udp = new UdpClient(options.ListenEndpoint);
+        DisableUdpConnectionReset(udp);
         using var heartbeats = new PeriodicTimer(TimeSpan.FromMilliseconds(250));
         using var measurements = new PeriodicTimer(
             TimeSpan.FromMilliseconds(session.Sensor == SensorId.Camera ? 20 : 100));
