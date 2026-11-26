@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sensor Backend — Live</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header>
+    <h1>Sensor Backend</h1>
+    <span id="stream" class="badge">connecting…</span>
+    <a href="/swagger">API (Swagger)</a>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>System</h2>
+      <p class="state"><span id="system-state" class="badge">—</span></p>
+      <p>Fault reason: <strong id="fault-reason">—</strong></p>
+    </section>
+
+    <section class="card">
+      <h2>Sensors</h2>
+      <table>
+        <thead><tr><th></th><th>State</th><th>Connection</th><th>Last seen</th><th>Session</th></tr></thead>
+        <tbody>
+          <tr><th>Camera</th><td id="camera-state">—</td><td id="camera-connection">—</td><td id="camera-seen">—</td><td id="camera-session" class="mono">—</td></tr>
+          <tr><th>Pointer</th><td id="pointer-state">—</td><td id="pointer-connection">—</td><td id="pointer-seen">—</td><td id="pointer-session" class="mono">—</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Latest raw image and pointer</h2>
+      <canvas id="raw-image" width="200" height="200" aria-label="Latest Camera image with Pointer position"></canvas>
+      <p>Image #<span id="raw-image-seq">—</span> · Pointer <span id="raw-pointer">—</span></p>
+    </section>
+
+    <section class="card">
+      <h2>Latest calculated color</h2>
+      <div class="result">
+        <div id="result-swatch" class="swatch" aria-label="Calculated color"></div>
+        <p class="mono" id="result-rgba">R — G — B — A —</p>
+      </div>
+      <canvas id="result-image" width="200" height="200" aria-label="Camera image used, with the Pointer position used"></canvas>
+      <p>Image #<span id="result-image-seq">—</span> at position <span id="result-position">—</span> (pointer #<span id="result-pointer-seq">—</span>)</p>
+      <p class="muted">Image <span id="result-skew">—</span> ms older than the position · calculated <span id="result-age">—</span> ago</p>
+      <p class="muted" id="stats">—</p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
