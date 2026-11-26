@@ -5,6 +5,11 @@ and the decisions taken. Requirements come from
 [`Developer-Sensor-Task.md`](simulators/Developer-Sensor-Task.md) and
 [`PROTOCOL.md`](simulators/PROTOCOL.md).
 
+**Design ownership:** the design described here (project structure, layering and hierarchy, mechanisms
+and technologies) was decided by the author, Lior Baram. The code was generated with an AI assistant
+in coordination with the author's decisions and questions, and reviewed by the author. See the
+[decision log](#11-decision-log) and [`DEVELOPMENT-PROCESS.md`](DEVELOPMENT-PROCESS.md).
+
 ## 1. Overview
 
 ```
@@ -202,8 +207,9 @@ original simulators, start the backend first.
 
 ## 11. Decision log
 
-Decisions made by the author during design, with the options considered. The process is described in
-[`DEVELOPMENT-PROCESS.md`](DEVELOPMENT-PROCESS.md).
+Every decision below was **made by the author** (Lior Baram). The AI assistant presented the options
+and trade-offs; the author chose, and the code was generated to match. See
+[`DEVELOPMENT-PROCESS.md`](DEVELOPMENT-PROCESS.md#ownership-of-the-design).
 
 | # | Topic | Options considered | Decision | Why |
 |---|---|---|---|---|

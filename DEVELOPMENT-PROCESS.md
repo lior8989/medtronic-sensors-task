@@ -3,10 +3,37 @@
 How this project was built, and the author's role in it.
 
 **Author:** Lior Baram.
-**Tools:** C# / .NET 10, Visual Studio, GitHub. Generative AI (Claude Code) was used as an
-implementation assistant, as the assignment allows. The author directed the work, made the design
-decisions recorded below and in [`DESIGN.md`](DESIGN.md#11-decision-log), and reviewed every change
-before it was merged.
+**Tools:** C# / .NET 10, Visual Studio, GitHub, and Generative AI (Claude Code) as an implementation
+assistant, as the assignment allows.
+
+## Ownership of the design
+
+> **The system's design is the author's.** The author decided how the solution is structured: which
+> projects exist and what each is responsible for, the layering and class hierarchy, the mechanisms
+> (threading, pairing, processing, fault recovery, live updates), the technologies, and the
+> engineering rules. The AI assistant generated the code **in coordination with the author**,
+> following these decisions and the author's questions, and changed it wherever the author's review
+> asked for it.
+
+How that worked in practice:
+
+- **Every design point was decided by the author.** For each open point, the assistant presented
+  options with their trade-offs and a recommendation, and the author chose. The 25 decisions and the
+  alternatives considered are in the [decision log](DESIGN.md#11-decision-log).
+- **Several of the key ideas came from the author directly:**
+  - separating transport, protocol and per-sensor control into distinct layers
+  - neutral, non-"Backend" project names
+  - the `SensorControl` name for the class that controls a sensor
+  - pairing triggered by the Pointer, not by the Camera
+  - parallel computation as a later extension point
+  - fixing the simulators so the whole system can start together
+  - the no-`while (true)` loop convention
+  - the balance rule between design and performance
+- **The author's questions shaped the code.** Questions about sequences, sessions, message
+  boundaries, structs vs. records, the retired-session bound and the loop style led either to code
+  changes or to confirmed, documented reasoning (see §4).
+- **Nothing was merged without the author's approval.** Every branch was presented to the author,
+  reviewed, and merged only after approval (§3).
 
 ## 1. Preparation: understanding the assignment
 
