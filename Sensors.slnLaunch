@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "Backend + Camera + Pointer",
+    "Projects": [
+      {
+        "Path": "src\\Sensor.WebApi\\Sensor.WebApi.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
+      },
+      {
+        "Path": "simulators\\Sensors\\CameraSensor\\CameraSensor.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "simulators\\Sensors\\PointerSensor\\PointerSensor.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
